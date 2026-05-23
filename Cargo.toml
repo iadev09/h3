@@ -9,3 +9,11 @@ members = [
     "examples",
 ]
 resolver = "2"
+
+[patch.crates-io]
+quinn = { git = "https://github.com/iadev09/quinn.git", branch = "server-config-acceptor" }
+quinn-proto = { git = "https://github.com/iadev09/quinn.git", branch = "server-config-acceptor" }
+quinn-udp = { git = "https://github.com/iadev09/quinn.git", branch = "server-config-acceptor" }
+rustls = { git = "https://github.com/iadev09/rustls.git", branch = "quic-acceptor" }
+rustls-aws-lc-rs = { git = "https://github.com/iadev09/rustls.git", branch = "quic-acceptor" }
+rustls-util = { git = "https://github.com/iadev09/rustls.git", branch = "quic-acceptor" }

@@ -9,6 +9,7 @@ use tracing::{error, info, trace_span};
 
 use h3::server::RequestResolver;
 use h3_quinn::quinn::{self, crypto::rustls::QuicServerConfig};
+use rustls::crypto::Identity;
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "server")]
@@ -87,9 +88,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cert = CertificateDer::from(std::fs::read(cert)?);
     let key = PrivateKeyDer::try_from(std::fs::read(key)?)?;
 
-    let mut tls_config = rustls::ServerConfig::builder()
-        .with_no_client_auth()
-        .with_single_cert(vec![cert], key)?;
+    let identity = Arc::new(Identity::from_cert_chain(vec![cert])?);
+    let mut tls_config =
+        rustls::ServerConfig::builder(Arc::new(rustls_aws_lc_rs::DEFAULT_PROVIDER.clone()))
+            .with_no_client_auth()
+            .with_single_cert(identity, key)?;
 
     tls_config.max_early_data_size = u32::MAX;
     tls_config.alpn_protocols = vec![ALPN.into()];

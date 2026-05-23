@@ -80,9 +80,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         error!("failed to parse trust anchor: {}", e);
     }
 
-    let mut tls_config = rustls::ClientConfig::builder()
-        .with_root_certificates(roots)
-        .with_no_client_auth();
+    let mut tls_config =
+        rustls::ClientConfig::builder(Arc::new(rustls_aws_lc_rs::DEFAULT_PROVIDER.clone()))
+            .with_root_certificates(roots)
+            .with_no_client_auth()?;
 
     tls_config.enable_early_data = true;
     tls_config.alpn_protocols = vec![ALPN.into()];
@@ -91,10 +92,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if opt.key_log_file {
         // Write all Keys to a file if SSLKEYLOGFILE is set
         // WARNING, we enable this for the example, you should think carefully about enabling in your own code
-        tls_config.key_log = Arc::new(rustls::KeyLogFile::new());
+        tls_config.key_log = Arc::new(rustls_util::KeyLogFile::new());
     }
 
-    let mut client_endpoint = h3_quinn::quinn::Endpoint::client("[::]:0".parse().unwrap())?;
+    let client_endpoint = h3_quinn::quinn::Endpoint::client("[::]:0".parse().unwrap())?;
 
     let client_config = quinn::ClientConfig::new(Arc::new(
         quinn::crypto::rustls::QuicClientConfig::try_from(tls_config)?,

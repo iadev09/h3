@@ -14,17 +14,14 @@ h3 = { path = "../h3", features = ["tracing"] }
 h3-quinn = { path = "../h3-quinn", features = ["tracing", "datagram"] }
 h3-webtransport = { path = "../h3-webtransport" }
 http = "1"
-quinn = { version = "0.11", default-features = false, features = [
+quinn = { git = "https://github.com/iadev09/quinn.git", branch = "server-config-acceptor", default-features = false, features = [
     "runtime-tokio",
-    "rustls",
-    "ring",
+    "rustls-aws-lc-rs",
 ] }
 rcgen = { version = "0.14" }
-rustls = { version = "0.23", default-features = false, features = [
-    "logging",
-    "ring",
-    "std",
-] }
+rustls = { version = "0.24.0-dev.0", default-features = false, features = ["log", "webpki"] }
+rustls-aws-lc-rs = { version = "0.1.0-dev.0", default-features = false, features = ["aws-lc-sys", "std"] }
+rustls-util = { version = "0.1.0-dev.0" }
 rustls-native-certs = "0.8"
 structopt = "0.3"
 tokio = { version = "1.27", features = ["full"] }

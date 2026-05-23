@@ -8,6 +8,8 @@ use h3::{
 use h3_quinn::quinn::{self, crypto::rustls::QuicServerConfig};
 use h3_webtransport::server::{self, WebTransportSession};
 use http::Method;
+use rustls::crypto::Identity;
+use rustls::enums::ApplicationProtocol;
 use rustls::pki_types::{CertificateDer, PrivateKeyDer};
 use std::{net::SocketAddr, path::PathBuf, sync::Arc, time::Duration};
 use structopt::StructOpt;
@@ -80,17 +82,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cert = CertificateDer::from(std::fs::read(cert)?);
     let key = PrivateKeyDer::try_from(std::fs::read(key)?)?;
 
-    let mut tls_config = rustls::ServerConfig::builder()
-        .with_no_client_auth()
-        .with_single_cert(vec![cert], key)?;
+    let identity = Arc::new(Identity::from_cert_chain(vec![cert])?);
+    let mut tls_config =
+        rustls::ServerConfig::builder(Arc::new(rustls_aws_lc_rs::DEFAULT_PROVIDER.clone()))
+            .with_no_client_auth()
+            .with_single_cert(identity, key)?;
 
     tls_config.max_early_data_size = u32::MAX;
-    let alpn: Vec<Vec<u8>> = vec![
-        b"h3".to_vec(),
-        b"h3-32".to_vec(),
-        b"h3-31".to_vec(),
-        b"h3-30".to_vec(),
-        b"h3-29".to_vec(),
+    let alpn = vec![
+        ApplicationProtocol::from(&b"h3"[..]),
+        ApplicationProtocol::from(&b"h3-32"[..]),
+        ApplicationProtocol::from(&b"h3-31"[..]),
+        ApplicationProtocol::from(&b"h3-30"[..]),
+        ApplicationProtocol::from(&b"h3-29"[..]),
     ];
     tls_config.alpn_protocols = alpn;
 
