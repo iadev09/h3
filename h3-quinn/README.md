@@ -1,28 +1,34 @@
-# h3-quinn
+# h3-quinn-forked
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../LICENSE)
-[![CI](https://github.com/hyperium/h3/workflows/CI/badge.svg)](https://github.com/hyperium/h3/actions?query=workflow%3ACI)
-[![Crates.io](https://img.shields.io/crates/v/h3-quinn.svg)](https://crates.io/crates/h3-quinn)
-[![Documentation](https://docs.rs/h3-quinn/badge.svg)](https://docs.rs/h3-quinn)
+The Quinn adapter in the [h3-forked family](https://github.com/iadev09/h3/tree/forked/0.0.8).
+This independent, experimental fork connects `h3-forked` to the official Quinn
+`0.11` series and accepts `quinn::Connection` directly.
 
-QUIC transport implementation for [h3](https://github.com/hyperium/h3) based on [Quinn](https://github.com/quinn-rs/quinn).
+Add the crates.io dependency:
 
-## Overview
+```toml
+[dependencies]
+h3 = { package = "h3-forked", version = "0.0.1" }
+h3-quinn = { package = "h3-quinn-forked", version = "0.0.1", features = ["datagram"] }
+```
 
-`h3-quinn` provides the integration between the `h3` HTTP/3 implementation and the `quinn` QUIC transport library. This creates a fully functional HTTP/3 client and server using Quinn as the underlying QUIC implementation.
+The Rust crate name remains `h3_quinn`. The optional `datagram` feature uses
+`h3-datagram-forked`; `tracing` retains its upstream behavior. Configure Quinn's
+runtime and TLS features in your application.
 
-## Features
+For virtual hosting on a shared QUIC endpoint, use
+[`quinn-deferred-config`](https://github.com/iadev09/quinn-deferred-config)
+with the official Quinn stack. It lets the application select each virtual
+host's `rustls::ServerConfig` from the ClientHello's SNI during the handshake.
+The resulting `quinn::Connection` can be passed directly to this adapter.
+We maintain both projects and will coordinate updates to keep their
+supported Quinn and Rustls versions compatible. Deferred configuration is
+optional and is not a dependency of this adapter.
 
-- Complete implementation of the `h3` QUIC transport traits
-- Full support for HTTP/3 client and server functionality
-- Optional tracing support
-- Optional datagram support
+See the [upstream adapter](https://github.com/hyperium/h3/tree/master/h3-quinn)
+and [Quinn documentation](https://docs.rs/quinn) for usage, and the
+[fork README](https://github.com/iadev09/h3/blob/forked/0.0.8/README.md) for provenance
+and maintenance policy. This is not an official Hyperium release.
 
-## License
-
-This project is licensed under the [MIT license](../LICENSE).
-
-## See Also
-
-- [h3](https://github.com/hyperium/h3) - The core HTTP/3 implementation
-- [Quinn](https://github.com/quinn-rs/quinn) - The QUIC implementation used by this crate
+Licensed under [MIT](https://github.com/iadev09/h3/blob/forked/0.0.8/LICENSE), with
+original copyright notices preserved.

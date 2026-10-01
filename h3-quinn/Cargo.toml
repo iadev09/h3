@@ -1,26 +1,29 @@
 [package]
-name = "h3-quinn"
-version = "0.0.10"
+name = "h3-quinn-forked"
+version.workspace = true
 rust-version = "1.74"
 authors = ["Jean-Christophe BEGUE <jc.begue@pm.me>"]
 edition = "2021"
-documentation = "https://docs.rs/h3-quinn"
-repository = "https://github.com/hyperium/h3"
+documentation = "https://docs.rs/h3-quinn-forked"
+repository = "https://github.com/iadev09/h3"
 readme = "README.md"
-description = "QUIC transport implementation based on Quinn."
+description = "Quinn transport integration for h3-forked."
 keywords = ["http3", "quic", "h3"]
 categories = ["network-programming", "web-programming"]
 license = "MIT"
 
+[lib]
+name = "h3_quinn"
+
 [dependencies]
-h3 = { version = "0.0.8", path = "../h3" }
+h3 = { package = "h3-forked", version = "0.0.1", path = "../h3" }
 bytes = "1"
 quinn = { version = "0.11.7", default-features = false, features = [
     "futures-io",
 ] }
 tokio-util = { version = "0.7.9" }
 futures-util = { version = "0.3.28", default-features = false }
-h3-datagram = {version = "0.0.2", path = "../h3-datagram", optional = true }
+h3-datagram = { package = "h3-datagram-forked", version = "0.0.1", path = "../h3-datagram", optional = true }
 tracing = { version = "0.1.40", optional = true }
 
 [features]

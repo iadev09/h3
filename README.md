@@ -1,81 +1,98 @@
-# h3
+# h3-forked
 
-An async HTTP/3 implementation.
+An independently published fork of [hyperium/h3](https://github.com/hyperium/h3).
+It makes merged upstream HTTP/3 and WebTransport changes available without
+waiting for an upstream release or requiring consumers to use Git dependencies,
+Cargo patches, or a private registry.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![CI](https://github.com/hyperium/h3/workflows/CI/badge.svg)](https://github.com/hyperium/h3/actions?query=workflow%3ACI)
-[![Discord chat](https://img.shields.io/discord/500028886025895936.svg?logo=discord)](https://discord.gg/q5mVhMD)
+This is not an official Hyperium release. The implementation remains
+experimental; publishing this fork does not imply API stability or production
+readiness.
 
-This crate provides an [HTTP/3][spec] implementation that is generic over a provided QUIC transport. This allows the project to focus on just HTTP/3, while letting users pick their QUIC implementation based on their specific needs. It includes client and server APIs. Check the original [design][] for more details.
+## Packages
 
-[spec]: https://www.rfc-editor.org/rfc/rfc9114
-[design]: docs/PROPOSAL.md
+All four packages live in this repository and depend on the forked family:
 
-## Status
+| Package | Version | Rust crate name |
+| --- | --- | --- |
+| `h3-forked` | `0.0.1` | `h3` |
+| `h3-quinn-forked` | `0.0.1` | `h3_quinn` |
+| `h3-datagram-forked` | `0.0.1` | `h3_datagram` |
+| `h3-webtransport-forked` | `0.0.1` | `h3_webtransport` |
 
-The `h3` crate is still very experimental. While the client and servers do work, there may still be bugs. And the API could change as we continue to explore. That said, we eagerly welcome contributions, trying it out in test environments, and using at your own risk.
+The four packages share one release version, starting at `0.0.1`. Every family
+release advances all four packages together, independently of upstream version
+numbers. The `0.0.x` fork line starts at `0.0.1` on the upstream `0.0.8`
+baseline. If upstream `0.0.9` is adopted as the next baseline, the fork family
+starts a `0.1.x` line at `0.1.0`. Merged changes within the current baseline
+advance the current fork line when published.
 
-The eventual goal is to use `h3` as an internal dependency of [hyper][].
+The shared version is defined in the root `Cargo.toml` under
+`[workspace.package]`; intra-family version requirements are updated with it.
+The initial fork is based on
+upstream commit [`43745ad`](https://github.com/hyperium/h3/commit/43745ad87e95b0c035ac9c547aad467303213425),
+including all changes merged through that commit.
 
-[hyper]: https://hyper.rs
+## Dependencies
 
-### Duvet
-This crate uses the [duvet crate][] to check compliance of the [spec][].  
-The generated [report][] displays the current status of the requirements of the spec.  
+Use the crates.io packages with aliases to retain the upstream Rust import
+names:
 
-Get more information about this tool in the [contributing][] document.
+```toml
+[dependencies]
+h3 = { package = "h3-forked", version = "0.0.1" }
+h3-quinn = { package = "h3-quinn-forked", version = "0.0.1", features = ["datagram"] }
+h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.1" }
+```
 
-[duvet crate]: https://crates.io/crates/duvet
-[spec]: https://www.rfc-editor.org/rfc/rfc9114
-[report]: https://hyper.rs/h3/ci/compliance/report.html#/
-[contributing]: CONTRIBUTING.md
+For direct HTTP Datagram access, add:
 
-## Features
+```toml
+h3-datagram = { package = "h3-datagram-forked", version = "0.0.1" }
+```
 
-* HTTP/3 client and server implementation
-* Async only API
-* QUIC transport abstraction via traits in the [`quic`](./h3/src/quic.rs) module
-* Runtime independent (h3 does not spawn tasks and works with any runtime)
-* Supported QUIC implementations to date are
-  [Quinn](https://github.com/quinn-rs/quinn) ([h3-quinn](./h3-quinn/))
-  , [s2n-quic](https://github.com/aws/s2n-quic)
-  ([s2n-quic-h3](https://github.com/aws/s2n-quic/tree/main/quic/s2n-quic-h3))
-  and [MsQuic](https://github.com/microsoft/msquic)
-  ([h3-msquic-async](https://github.com/masa-koz/msquic-async-rs/tree/main/h3-msquic-async))
+`h3-quinn-forked` uses the official Quinn `0.11` series and accepts its
+`quinn::Connection` directly. Add `quinn` with the runtime and TLS features your
+application needs. A separate Quinn fork or Hyper integration is not required.
+Use this fork family consistently wherever H3 types cross crate boundaries;
+aliasing `h3-forked` does not change another dependency's upstream `h3` types.
 
-## Overview
+### Using quinn-deferred-config
 
-* **h3** HTTP/3 implementation
-* **h3-quinn** QUIC transport implementation based on [Quinn](https://github.com/quinn-rs/quinn/)
+For virtual hosting on a shared QUIC endpoint, this family can be used with
+[`quinn-deferred-config`](https://github.com/iadev09/quinn-deferred-config).
+During the QUIC handshake, the application uses the ClientHello's SNI to select
+the virtual host's `rustls::ServerConfig`, including its certificate and TLS
+policy, within the official Quinn stack. The resulting `quinn::Connection` is
+used directly by `h3-quinn-forked` for HTTP/3 and WebTransport.
 
-## Getting Started
+We maintain both projects. Updates to this fork and `quinn-deferred-config`
+will be coordinated to keep their supported Quinn and Rustls versions
+compatible, so applications can continue to use them together. Applications
+choose whether to use deferred configuration; it is not a dependency of the
+H3 fork family.
 
-The [examples](./examples) directory can help get started in two ways:
+## Upstream and maintenance
 
-- There are ready-to-use `client` and `server` binaries to interact with _other_ HTTP/3 peers. Check the README in that directory.
-- The source code of those examples can help teach how to use `h3` as either a client or a server.
+See the [upstream README](https://github.com/hyperium/h3#readme) for the project
+overview, design, and protocol documentation. The [local examples](https://github.com/iadev09/h3/tree/forked/0.0.8/examples)
+use this fork's packages. Upstream adapters that depend on the original `h3`
+package need to be adapted before they can be used with this fork.
 
-### Server
+`master` tracks upstream. `forked/0.0.8` holds the package names, dependency
+wiring, and fork documentation, and receives upstream changes by merge. The
+branch name records the original upstream version; fork releases use their own
+shared version. The branch includes merged changes beyond that upstream release.
+When upstream edits overlap, preserve this fork's identity while reviewing the
+incoming changes. Fork README files describe this distribution and link to
+upstream documentation rather than maintaining copies of it.
 
-You can find a full server example in [`examples/server.rs`](./examples/server.rs)
-
-### Client
-
-You can find a full client example in [`examples/client.rs`](./examples/client.rs)
-
-## QUIC Generic
-
-As mentioned, the goal of this library is to be generic over a QUIC implementation. To that effect, integrations with QUIC libraries exist:
-
-- [`h3-quinn`](./h3-quinn/): in this same repository.
-- [`s2n-quic-h3`](https://github.com/aws/s2n-quic/tree/main/quic/s2n-quic-h3)
-- [`h3-msquic-async`](https://github.com/masa-koz/msquic-async-rs/tree/main/h3-msquic-async)
-
-## Interoperability
-
-This crate as well as the quic implementations are tested ([quinn](https://github.com/quinn-rs/quinn-interop), [s2n-quic](https://github.com/aws/s2n-quic/tree/main/scripts/interop), [MsQuic](https://github.com/microsoft/msquic/tree/main/src/tools/interop)) for interoperability and performance in the [quic-interop-runner](https://github.com/marten-seemann/quic-interop-runner).
-You can see the results at (https://interop.seemann.io/).
+Report fork packaging or integration issues at
+[iadev09/h3](https://github.com/iadev09/h3/issues). Protocol fixes should be
+contributed upstream when applicable. See [the release workflow](https://github.com/iadev09/h3/blob/forked/0.0.8/docs/PUBLISH.md)
+for publication order and provenance.
 
 ## License
 
-h3 is provided under the MIT license. See [LICENSE](LICENSE).
+[MIT](https://github.com/iadev09/h3/blob/forked/0.0.8/LICENSE). Original copyright notices and contributor attribution are
+preserved.

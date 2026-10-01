@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - 'forked/**'
 
 env:
   RUST_BACKTRACE: 1
@@ -69,7 +70,7 @@ jobs:
         run: cargo +stable generate-lockfile
         env:
           CARGO_RESOLVER_INCOMPATIBLE_RUST_VERSIONS: fallback
-      - run: cargo check --locked -p h3
+      - run: cargo check --locked -p h3-forked
 
   msrv_h3_quinn:
     name: Check MSRV of `h3-quinn`
@@ -85,7 +86,7 @@ jobs:
         run: cargo +stable generate-lockfile
         env:
           CARGO_RESOLVER_INCOMPATIBLE_RUST_VERSIONS: fallback
-      - run: cargo check --locked -p h3-quinn
+      - run: cargo check --locked -p h3-quinn-forked
 
   test:
     name: Test ${{ matrix.toolchain }} ${{ matrix.os }} ${{ matrix.target }}
@@ -134,7 +135,7 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: ${{ env.toolchain_doc }}
-      - run: cargo rustdoc -p h3 -- -D intra-doc-link-resolution-failure
+      - run: cargo rustdoc -p h3-forked -- -D intra-doc-link-resolution-failure
 
   fuzz:
     name: Fuzz test

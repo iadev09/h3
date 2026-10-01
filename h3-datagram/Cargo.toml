@@ -1,18 +1,20 @@
 [package]
-name = "h3-datagram"
-version = "0.0.2"
+name = "h3-datagram-forked"
+version.workspace = true
 edition = "2021"
-documentation = "https://docs.rs/h3-datagram"
-repository = "https://github.com/hyperium/h3"
+documentation = "https://docs.rs/h3-datagram-forked"
+repository = "https://github.com/iadev09/h3"
 readme = "readme.md"
-description = "rfc9297 extension for the h3 crate"
+description = "HTTP Datagram extension for h3-forked."
 keywords = ["http3", "quic", "rfc9297"]
 categories = ["network-programming", "web-programming"]
 license = "MIT"
 
 
+[lib]
+name = "h3_datagram"
+
 [dependencies]
-#h3 = { path = "../h3" }
 bytes = "1.4"
 tracing = { version = "0.1.40", optional = true }
 
@@ -20,6 +22,7 @@ tracing = { version = "0.1.40", optional = true }
 tracing = ["dep:tracing"]
 
 [dependencies.h3]
-version = "0.0.8"
+package = "h3-forked"
+version = "0.0.1"
 path = "../h3"
 features = ["i-implement-a-third-party-backend-and-opt-into-breaking-changes"]

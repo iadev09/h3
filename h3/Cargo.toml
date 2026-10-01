@@ -1,6 +1,6 @@
 [package]
-name = "h3"
-version = "0.0.8"
+name = "h3-forked"
+version.workspace = true
 rust-version = "1.74"
 authors = [
     "Sean McArthur <sean@seanmonstar.com>",
@@ -8,16 +8,19 @@ authors = [
 ]
 license = "MIT"
 edition = "2021"
-documentation = "https://docs.rs/h3"
-repository = "https://github.com/hyperium/h3"
+documentation = "https://docs.rs/h3-forked"
+repository = "https://github.com/iadev09/h3"
 readme = "../README.md"
-description = "An async HTTP/3 implementation."
+description = "An independently published fork of the h3 async HTTP/3 implementation."
 keywords = ["http3", "quic", "h3"]
 categories = [
     "network-programming",
     "web-programming::http-client",
     "web-programming::http-server",
 ]
+
+[lib]
+name = "h3"
 
 [features]
 i-implement-a-third-party-backend-and-opt-into-breaking-changes = []
@@ -54,4 +57,4 @@ tracing-subscriber = { version = "0.3", default-features = false, features = [
 ] }
 futures = { version = "0.3.28" }
 tokio-util = { version = "0.7.9" }
-h3-datagram = {path = "../h3-datagram" }
+h3-datagram = { package = "h3-datagram-forked", path = "../h3-datagram" }
