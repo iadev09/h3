@@ -8,8 +8,8 @@ Add the crates.io dependency:
 
 ```toml
 [dependencies]
-h3 = { package = "h3-forked", version = "0.0.1" }
-h3-quinn = { package = "h3-quinn-forked", version = "0.0.1", features = ["datagram"] }
+h3 = { package = "h3-forked", version = "0.0.2" }
+h3-quinn = { package = "h3-quinn-forked", version = "0.0.2", features = ["datagram"] }
 ```
 
 The Rust crate name remains `h3_quinn`. The optional `datagram` feature uses

@@ -23,6 +23,6 @@ tracing = ["dep:tracing"]
 
 [dependencies.h3]
 package = "h3-forked"
-version = "0.0.1"
+version = "0.0.2"
 path = "../h3"
 features = ["i-implement-a-third-party-backend-and-opt-into-breaking-changes"]

@@ -8,7 +8,7 @@ Add the crates.io dependency:
 
 ```toml
 [dependencies]
-h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.1" }
+h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.2" }
 ```
 
 The Rust crate name remains `h3_webtransport`. See the
@@ -47,7 +47,7 @@ This source API replaces the connection-owning `WebTransportSession::accept`
 API from fork version `0.0.1`. Session `accept_bi`/`accept_uni` calls move to
 the driver's `accept`; its result distinguishes bidi resolvers from uni streams.
 The old per-session datagram reader moves to the driver, and outgoing stream
-methods no longer accept another session's ID. This change is not yet released.
+methods no longer accept another session's ID. This change ships in fork `0.0.2`.
 
 This is an independent, experimental fork, not an official Hyperium release.
 Licensed under [MIT](https://github.com/iadev09/h3/blob/forked/0.0.8/LICENSE), with
