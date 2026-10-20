@@ -15,10 +15,10 @@ All four packages live in this repository and depend on the forked family:
 
 | Package | Version | Rust crate name |
 | --- | --- | --- |
-| `h3-forked` | `0.0.2` | `h3` |
-| `h3-quinn-forked` | `0.0.2` | `h3_quinn` |
-| `h3-datagram-forked` | `0.0.2` | `h3_datagram` |
-| `h3-webtransport-forked` | `0.0.2` | `h3_webtransport` |
+| `h3-forked` | `0.0.3` | `h3` |
+| `h3-quinn-forked` | `0.0.3` | `h3_quinn` |
+| `h3-datagram-forked` | `0.0.3` | `h3_datagram` |
+| `h3-webtransport-forked` | `0.0.3` | `h3_webtransport` |
 
 The four packages share one release version, starting at `0.0.1`. Every family
 release advances all four packages together, independently of upstream version
@@ -32,6 +32,22 @@ The shared version is defined in the root `Cargo.toml` under
 The initial fork is based on
 upstream commit [`43745ad`](https://github.com/hyperium/h3/commit/43745ad87e95b0c035ac9c547aad467303213425),
 including all changes merged through that commit.
+
+## Release 0.0.3
+
+The upstream baseline remains `43745ad87e95b0c035ac9c547aad467303213425`:
+H3 `0.0.8`, Quinn adapter `0.0.10`, Datagram `0.0.2`, and WebTransport `0.1.2`.
+The official Quinn `0.11` dependency is unchanged.
+
+WebTransport adds `session.closed().await` to observe CONNECT FIN, reset or
+connection loss without taking the connection driver or terminating admitted
+streams. Waiting is cancel-safe and retains its result for concurrent and
+subsequent callers. It does not interpret capsule close codes; GOAWAY alone
+does not complete it. Stream admission and graceful drain remain caller-owned.
+
+All four fork packages advance together to `0.0.3`. There are no further API
+migrations beyond selecting this family version consistently; the connection
+and session ownership model introduced in `0.0.2` remains unchanged.
 
 ## Release 0.0.2
 
@@ -55,15 +71,15 @@ names:
 
 ```toml
 [dependencies]
-h3 = { package = "h3-forked", version = "0.0.2" }
-h3-quinn = { package = "h3-quinn-forked", version = "0.0.2", features = ["datagram"] }
-h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.2" }
+h3 = { package = "h3-forked", version = "0.0.3" }
+h3-quinn = { package = "h3-quinn-forked", version = "0.0.3", features = ["datagram"] }
+h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.3" }
 ```
 
 For direct HTTP Datagram access, add:
 
 ```toml
-h3-datagram = { package = "h3-datagram-forked", version = "0.0.2" }
+h3-datagram = { package = "h3-datagram-forked", version = "0.0.3" }
 ```
 
 `h3-quinn-forked` uses the official Quinn `0.11` series and accepts its

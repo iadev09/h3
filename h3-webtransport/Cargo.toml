@@ -22,16 +22,16 @@ http = "1"
 pin-project-lite = { version = "0.2", default-features = false }
 tracing = "0.1.37"
 tokio = { version = "1.28", default-features = false, features = ["sync"] }
-h3-datagram = { package = "h3-datagram-forked", version = "0.0.2", path = "../h3-datagram" }
+h3-datagram = { package = "h3-datagram-forked", version = "0.0.3", path = "../h3-datagram" }
 
 [dependencies.h3]
 package = "h3-forked"
-version = "0.0.2"
+version = "0.0.3"
 path = "../h3"
 features = ["i-implement-a-third-party-backend-and-opt-into-breaking-changes"]
 
 [dev-dependencies]
-h3-quinn = { package = "h3-quinn-forked", version = "0.0.2", path = "../h3-quinn", features = ["datagram"] }
+h3-quinn = { package = "h3-quinn-forked", version = "0.0.3", path = "../h3-quinn", features = ["datagram"] }
 quinn = { version = "0.11", default-features = false, features = ["runtime-tokio", "rustls", "ring"] }
 rcgen = "0.14"
 rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }

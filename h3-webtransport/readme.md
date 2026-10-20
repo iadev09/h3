@@ -8,7 +8,7 @@ Add the crates.io dependency:
 
 ```toml
 [dependencies]
-h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.2" }
+h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.3" }
 ```
 
 The Rust crate name remains `h3_webtransport`. See the
