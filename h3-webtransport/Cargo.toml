@@ -29,3 +29,10 @@ package = "h3-forked"
 version = "0.0.1"
 path = "../h3"
 features = ["i-implement-a-third-party-backend-and-opt-into-breaking-changes"]
+
+[dev-dependencies]
+h3-quinn = { package = "h3-quinn-forked", path = "../h3-quinn", features = ["datagram"] }
+quinn = { version = "0.11", default-features = false, features = ["runtime-tokio", "rustls", "ring"] }
+rcgen = "0.14"
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
+tokio = { version = "1", features = ["rt", "macros", "io-util"] }
