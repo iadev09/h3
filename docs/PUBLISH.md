@@ -1,16 +1,24 @@
 # Publishing the fork
 
-Publish from `forked/0.0.8` to crates.io. `origin` is `iadev09/h3`; `upstream`
-is `hyperium/h3` and is used to receive upstream changes.
+Publish from `forked/0.0.8` to crates.io. Receive upstream changes from
+[hyperium/h3](https://github.com/hyperium/h3); send fork branches and release
+tags only to the fork repository selected by the maintainer.
 
 ## Prepare
 
 1. Fetch upstream and merge the selected upstream commit into the fork branch.
+   Validated contributions awaiting review may also be merged from their
+   contribution branches. Retain those commits in the fork's ancestry so the
+   same changes can be reconciled when upstream accepts or revises them.
    Preserve the fork package names, aliases, metadata, and README files when
    resolving conflicts; review upstream changes to dependency versions and
-   features rather than discarding them.
-2. Record the upstream commit and any fork-specific changes in the release
-   notes. Keep the initial provenance in the README as a historical reference.
+   features rather than discarding them. Keep application-specific integration
+   in consuming projects. Preserve released history and tags.
+2. Record the upstream commit, any unmerged contribution commits and PR links,
+   and fork-specific changes in the release notes. Distinguish accepted upstream
+   changes from contributions still under review. Keep the initial provenance
+   in the README as a historical reference, and label unreleased APIs separately
+   from the latest published version.
 3. All four packages share one version, starting at `0.0.1`. For each subsequent
    family release, increase `[workspace.package].version` in the root
    `Cargo.toml`, then update all intra-family version requirements and README
@@ -46,6 +54,6 @@ dependency in `h3-forked` is for workspace tests and is omitted from its publish
 manifest; it does not create a publication cycle.
 
 Tag each published package as `<package>-v<version>`, for example
-`h3-forked-v0.0.1`, and push the release branch and those tags to `origin`.
+`h3-forked-v0.0.1`, and push the release branch and those tags to the fork.
 Create release notes identifying the upstream commit and the package versions.
-Never publish fork releases or tags to `upstream`.
+Never publish fork releases or tags to the upstream repository.

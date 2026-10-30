@@ -1,9 +1,9 @@
 # h3-forked
 
 An independently published fork of [hyperium/h3](https://github.com/hyperium/h3).
-It makes merged upstream HTTP/3 and WebTransport changes available without
-waiting for an upstream release or requiring consumers to use Git dependencies,
-Cargo patches, or a private registry.
+It publishes upstream HTTP/3 and WebTransport changes, including independently
+validated contributions awaiting upstream review, without requiring consumers
+to use Git dependencies, Cargo patches, or a private registry.
 
 This is not an official Hyperium release. The implementation remains
 experimental; publishing this fork does not imply API stability or production
@@ -32,6 +32,32 @@ The shared version is defined in the root `Cargo.toml` under
 The initial fork is based on
 upstream commit [`43745ad`](https://github.com/hyperium/h3/commit/43745ad87e95b0c035ac9c547aad467303213425),
 including all changes merged through that commit.
+
+## Unreleased
+
+The source branch incorporates the following upstream contributions as its
+implementation baseline. They are still under review, not merged upstream:
+
+- [#381](https://github.com/hyperium/h3/pull/381): separate the connection driver
+  from individual WebTransport sessions.
+- [#382](https://github.com/hyperium/h3/pull/382): observe CONNECT closure
+  independently of the driver.
+- [#383](https://github.com/hyperium/h3/pull/383): send and receive session close
+  capsules, retaining the application code and reason and terminating only that
+  session's streams.
+- [#384](https://github.com/hyperium/h3/pull/384): map data stream application
+  errors to and from the WebTransport HTTP/3 error range.
+
+The exact contribution commits are retained in the fork's ancestry through
+[`7ed042e`](https://github.com/iadev09/h3/commit/7ed042e21711f555ea0d18ab50f046b0e6dc0df1).
+The first two changes already shipped in fork `0.0.2` and `0.0.3`, respectively.
+The last two are unreleased. This alignment does not change the package version.
+
+For migration from `0.0.3`, `session.closed()` now returns `SessionClose` with
+the code and reason. Session termination resets its data streams; callers still
+own graceful drain before closure. Inherent stream `reset` and `stop_sending`
+methods accept `u32` application codes; the `h3::quic` traits retain raw wire
+codes. See the [WebTransport API notes](h3-webtransport/readme.md).
 
 ## Release 0.0.3
 
@@ -110,12 +136,20 @@ overview, design, and protocol documentation. The [local examples](https://githu
 use this fork's packages. Upstream adapters that depend on the original `h3`
 package need to be adapted before they can be used with this fork.
 
-`master` tracks upstream. `forked/0.0.8` holds the package names, dependency
-wiring, and fork documentation, and receives upstream changes by merge. The
-branch name records the original upstream version; fork releases use their own
-shared version. The branch includes merged changes beyond that upstream release.
-When upstream edits overlap, preserve this fork's identity while reviewing the
-incoming changes. Fork README files describe this distribution and link to
+`master` tracks upstream. `forked/0.0.8` receives upstream history and validated
+contribution branches by merge. The branch name records the original upstream
+version; fork releases use their own shared version. Unmerged contributions
+are identified above and reviewed again when upstream accepts or revises them.
+
+Keep general protocol changes on upstream contribution branches, with their
+commits preserved in the fork's ancestry. Fork-only adjustments cover package
+names, dependency aliases, publication metadata and provenance documentation.
+Application-specific integration belongs in consuming projects; the Quinn
+adapter here remains the upstream adapter with fork package wiring.
+
+When upstream edits overlap, reconcile the implementation against the accepted
+upstream changes and retain the fork's package identity. Preserve released
+history and tags. Fork README files describe this distribution and link to
 upstream documentation rather than maintaining copies of it.
 
 Report fork packaging or integration issues at
