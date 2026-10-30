@@ -15,10 +15,10 @@ All four packages live in this repository and depend on the forked family:
 
 | Package | Version | Rust crate name |
 | --- | --- | --- |
-| `h3-forked` | `0.0.3` | `h3` |
-| `h3-quinn-forked` | `0.0.3` | `h3_quinn` |
-| `h3-datagram-forked` | `0.0.3` | `h3_datagram` |
-| `h3-webtransport-forked` | `0.0.3` | `h3_webtransport` |
+| `h3-forked` | `0.0.4` | `h3` |
+| `h3-quinn-forked` | `0.0.4` | `h3_quinn` |
+| `h3-datagram-forked` | `0.0.4` | `h3_datagram` |
+| `h3-webtransport-forked` | `0.0.4` | `h3_webtransport` |
 
 The four packages share one release version, starting at `0.0.1`. Every family
 release advances all four packages together, independently of upstream version
@@ -33,9 +33,13 @@ The initial fork is based on
 upstream commit [`43745ad`](https://github.com/hyperium/h3/commit/43745ad87e95b0c035ac9c547aad467303213425),
 including all changes merged through that commit.
 
-## Unreleased
+## Release 0.0.4
 
-The source branch incorporates the following upstream contributions as its
+The upstream baseline remains `43745ad87e95b0c035ac9c547aad467303213425`:
+H3 `0.0.8`, Quinn adapter `0.0.10`, Datagram `0.0.2`, and WebTransport `0.1.2`.
+The official Quinn `0.11` dependency is unchanged.
+
+This release incorporates the following upstream contributions as its
 implementation baseline. They are still under review, not merged upstream:
 
 - [#381](https://github.com/hyperium/h3/pull/381): separate the connection driver
@@ -51,7 +55,9 @@ implementation baseline. They are still under review, not merged upstream:
 The exact contribution commits are retained in the fork's ancestry through
 [`7ed042e`](https://github.com/iadev09/h3/commit/7ed042e21711f555ea0d18ab50f046b0e6dc0df1).
 The first two changes already shipped in fork `0.0.2` and `0.0.3`, respectively.
-The last two are unreleased. This alignment does not change the package version.
+The last two ship in `0.0.4`; all four fork packages advance together. The Quinn
+adapter also makes pending reads cancellation-safe so session termination can
+stop an outstanding receive.
 
 For migration from `0.0.3`, `session.closed()` now returns `SessionClose` with
 the code and reason. Session termination resets its data streams; callers still
@@ -97,15 +103,15 @@ names:
 
 ```toml
 [dependencies]
-h3 = { package = "h3-forked", version = "0.0.3" }
-h3-quinn = { package = "h3-quinn-forked", version = "0.0.3", features = ["datagram"] }
-h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.3" }
+h3 = { package = "h3-forked", version = "0.0.4" }
+h3-quinn = { package = "h3-quinn-forked", version = "0.0.4", features = ["datagram"] }
+h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.4" }
 ```
 
 For direct HTTP Datagram access, add:
 
 ```toml
-h3-datagram = { package = "h3-datagram-forked", version = "0.0.3" }
+h3-datagram = { package = "h3-datagram-forked", version = "0.0.4" }
 ```
 
 `h3-quinn-forked` uses the official Quinn `0.11` series and accepts its

@@ -8,7 +8,7 @@ Add the crates.io dependency:
 
 ```toml
 [dependencies]
-h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.3" }
+h3-webtransport = { package = "h3-webtransport-forked", version = "0.0.4" }
 ```
 
 The Rust crate name remains `h3_webtransport`. See the
@@ -19,9 +19,10 @@ for this fork's API. The
 [fork README](https://github.com/iadev09/h3/blob/forked/0.0.8/README.md) describes
 provenance and maintenance policy.
 
-The APIs below describe the current source branch. Session close capsules and
-data stream application-error mapping are not in the published `0.0.3` release;
-see the [unreleased changes](../README.md#unreleased).
+Session close capsules and data stream application-error mapping are available
+from fork `0.0.4`. See the
+[release notes](https://github.com/iadev09/h3/blob/forked/0.0.8/README.md#release-004)
+for migration from `0.0.3`.
 
 ## Connection and session ownership
 
